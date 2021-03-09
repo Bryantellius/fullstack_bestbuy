@@ -1,13 +1,15 @@
 import * as React from "react";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { IProduct } from "../utils/types";
 import EditModal from "../components/EditModal";
 
 const ProductView: React.FC = () => {
+  const [feedback, setFeedback] = React.useState<string>("");
   const [product, setProduct] = React.useState<IProduct>(null);
   const [displayModal, setDisplayModal] = React.useState<boolean>(false);
 
   const params: any = useParams();
+  const history: any = useHistory();
 
   React.useEffect(() => {
     fetchProduct();
@@ -24,18 +26,40 @@ const ProductView: React.FC = () => {
     setDisplayModal(!displayModal);
   };
 
+  const handleProductRemoval = () => {
+    fetch(`/api/products/${product.ProductID}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setFeedback(
+          "Successfully removed product. You are about to be redirected.."
+        );
+        setTimeout(() => history.push("/products"), 3000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setFeedback("An occurred while removing the product. IT STAYS.");
+      });
+  };
+
   if (displayModal) {
-    return <EditModal
-      name={product.Name}
-      categoryID={product.CategoryID}
-      stockLevel={product.StockLevel}
-      price={product.Price}
-      onSale={product.OnSale}
-      handleDisplayModal={handleDisplayModal}
-    />;
+    return (
+      <EditModal
+        productID={product.ProductID}
+        name={product.Name}
+        categoryID={product.CategoryID}
+        stockLevel={product.StockLevel}
+        price={product.Price}
+        onSale={product.OnSale}
+        handleDisplayModal={handleDisplayModal}
+        setProduct={setProduct}
+      />
+    );
   } else {
     return (
       <main className="container">
+        <p className="text-center">{feedback}</p>
         <div className="card text-center">
           <div className="card-header row p-2">
             <div className="col-md-8">
@@ -70,6 +94,7 @@ const ProductView: React.FC = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="feather feather-trash-2"
+                onClick={handleProductRemoval}
               >
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>

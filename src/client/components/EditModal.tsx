@@ -1,12 +1,14 @@
 import * as React from "react";
 
 const EditModal: React.FC<IEditModalProps> = ({
+  productID,
   name,
   categoryID,
   price,
   onSale,
   stockLevel,
   handleDisplayModal,
+  setProduct,
 }) => {
   const [feedback, setFeedback] = React.useState<string>("");
   const [Name, setName] = React.useState<string>(name);
@@ -29,16 +31,18 @@ const EditModal: React.FC<IEditModalProps> = ({
 
   const formSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const updatedProduct = { Name, Price, OnSale, StockLevel, CategoryID };
 
-    fetch("/api/products", {
+    fetch(`/api/products/${productID}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ Name, Price, OnSale, StockLevel, CategoryID }),
+      body: JSON.stringify(updatedProduct),
     })
       .then((res) => res.json())
       .then((res) => {
         if (res) {
           setFeedback("Successfully updated product.");
+          setProduct(updatedProduct);
         }
       })
       .catch((err) => {
@@ -139,12 +143,14 @@ const EditModal: React.FC<IEditModalProps> = ({
 };
 
 interface IEditModalProps {
+  productID: number;
   name: string;
   onSale: number;
   price: number;
   stockLevel: string;
   categoryID: number;
   handleDisplayModal: any;
+  setProduct: any;
 }
 
 export default EditModal;

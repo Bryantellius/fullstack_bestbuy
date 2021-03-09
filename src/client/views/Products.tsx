@@ -4,15 +4,39 @@ import { IProduct } from "../utils/types";
 
 const Products: React.FC = () => {
   const [products, setProducts] = React.useState([]);
+  const [categories, setCategories] = React.useState([]);
+  const [filteredCategoryID, setFilteredCategoryID] = React.useState<number>(
+    null
+  );
 
   React.useEffect(() => {
-    fetchProducts();
+    if (products.length === 0) {
+      fetchProducts();
+    }
+    fetchCategories();
   }, []);
+
+  const handleFilter = (e: any) => {
+    e.preventDefault();
+    fetch(`/api/products/filter_category/${filteredCategoryID}`)
+      .then((res) => res.json())
+      .then((res) => setProducts(res))
+      .catch((err) => console.log(err));
+  };
 
   const fetchProducts = () => {
     fetch("/api/products")
       .then((res) => res.json())
-      .then((data) => setProducts(data))
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const fetchCategories = () => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
       .catch((err) => console.log(err));
   };
 
@@ -24,7 +48,32 @@ const Products: React.FC = () => {
           Add Product
         </Link>
       </div>
-      <ul className="list-group">
+      <div className="row">
+        <h3>Count: {products.length}</h3>
+        <form className="form" onSubmit={handleFilter}>
+          <div className="form-group">
+            <select
+              className="form-control"
+              name="categorySelect"
+              id="categorySelect"
+              onChange={(e) => setFilteredCategoryID(parseInt(e.target.value))}
+            >
+              <option value="0">All</option>
+              {categories.map((category: any) => {
+                return (
+                  <option value={category.CategoryID} key={category.CategoryID}>
+                    {category.Name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="form-group">
+            <input className="btn btn-primary" type="submit" value="Filter" />
+          </div>
+        </form>
+      </div>
+      <ol className="list-group">
         {products.map((p: IProduct) => {
           return (
             <li key={p.ProductID} className="list-group-item">
@@ -32,7 +81,7 @@ const Products: React.FC = () => {
             </li>
           );
         })}
-      </ul>
+      </ol>
     </main>
   );
 };

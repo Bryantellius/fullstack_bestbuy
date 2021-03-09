@@ -3,7 +3,7 @@ import Query from "../models";
 const getOneCategory = (id: number) => {
   return Query("SELECT CategoryID, Name FROM categories WHERE CategoryID = ?", [
     id,
-  ]);k
+  ]);
 };
 
 const getAllCategories = () => {

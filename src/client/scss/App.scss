@@ -7,4 +7,11 @@ $theme-colors: (
   "info": #5a7a8e,
 );
 
+svg:hover {
+  cursor: pointer;
+  background-color: #67689b;
+  stroke: aliceblue;
+  border-radius: 15px;
+}
+
 @import "../../../node_modules/bootstrap/scss/bootstrap.scss";

@@ -23,10 +23,38 @@ const AddProduct = () => {
   const formSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const form: any = document.querySelector("input[type=file]");
+    const fileList: any = form.files;
+    const fileName: any = document.getElementById(
+      "fileInput"
+    ) as HTMLInputElement;
+
+    const formData = new FormData();
+    formData.append("image", fileList[0]);
+    fetch("/api/images", {
+      method: "POST",
+      headers: {
+        encoding: "binary",
+      },
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
+    let body = {
+      Name,
+      Price,
+      OnSale,
+      StockLevel,
+      CategoryID,
+      imageURL: `/assets/productImages/${fileName.value.slice(12)}`,
+    };
+
     fetch("/api/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ Name, Price, OnSale, StockLevel, CategoryID }),
+      body: JSON.stringify(body),
     })
       .then((res) => res.json())
       .then((res) => {
@@ -40,16 +68,6 @@ const AddProduct = () => {
           "An error occurred while inserting the product. Try again or contact support."
         );
       });
-  };
-
-  const validatePrice = (e: any) => {
-    let price: number = Number(e.target.value.toFixed(2));
-    if (isNaN(price)) {
-      setFeedback("Price is not valid");
-      return;
-    }
-
-    setPrice(price);
   };
 
   return (
@@ -119,6 +137,26 @@ const AddProduct = () => {
                 id="productStockLevel"
                 onChange={(e) => setStockLevel(e.target.value)}
               />
+            </div>
+            <div className="mb-3">
+              <label>Image:</label>
+              <div className="custom-file">
+                <input
+                  type="file"
+                  name="uploadFile"
+                  className="custom-file-input"
+                  id="fileInput"
+                  accept="image/*"
+                  onChange={(e) => {
+                    document.getElementById(
+                      "fileLabel"
+                    ).innerHTML = e.target.value.slice(12);
+                  }}
+                />
+                <label id="fileLabel" className="custom-file-label">
+                  Choose file
+                </label>
+              </div>
             </div>
             <div className="form-group">
               <input className="form-control" type="submit" />
