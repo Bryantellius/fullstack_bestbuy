@@ -2,7 +2,7 @@ import * as React from "react";
 
 const Template = () => {
   return (
-    <main>
+    <main className="container">
       <h1>Template</h1>
     </main>
   );

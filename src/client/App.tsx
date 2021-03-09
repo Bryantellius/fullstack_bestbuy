@@ -5,10 +5,12 @@ import Products from "./views/Products";
 import NotFound from "./views/NotFound";
 import ProductView from "./views/ProductView";
 import AddProduct from "./views/AddProduct";
+import Navbar from "./components/Navbar";
 
 const App: React.FC = () => {
   return (
     <Router>
+      <Navbar />
       <Switch>
         <Route exact path="/">
           <Home />

@@ -1,3 +1,10 @@
-@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-
 // Start styling it up!
+
+$theme-colors: (
+  "primary": #deb887,
+  "secondary": #67689b,
+  "warning": #dec887,
+  "info": #5a7a8e,
+);
+
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
