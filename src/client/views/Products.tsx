@@ -73,15 +73,17 @@ const Products: React.FC = () => {
           </div>
         </form>
       </div>
-      <ol className="list-group">
+      <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4">
         {products.map((p: IProduct) => {
+          console.log(p.imageURL);
           return (
-            <li key={p.ProductID} className="list-group-item">
+            <div key={p.ProductID} className="card">
               <Link to={`/products/${p.ProductID}`}>{p.Name}</Link>
-            </li>
+              <img src={p.imageURL} alt={p.Name} />
+            </div>
           );
         })}
-      </ol>
+      </div>
     </main>
   );
 };

@@ -14,4 +14,5 @@ export default {
     database: process.env.DB_SCHEMA,
   },
   port: parseInt(process.env.PORT, 10),
+  secret_key: process.env.SECRET_KEY,
 };

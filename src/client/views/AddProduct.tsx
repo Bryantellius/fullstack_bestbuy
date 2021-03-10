@@ -39,33 +39,42 @@ const AddProduct = () => {
       body: formData,
     })
       .then((res) => res.json())
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-
-    let body = {
-      Name,
-      Price,
-      OnSale,
-      StockLevel,
-      CategoryID,
-      imageURL: `/assets/productImages/${fileName.value.slice(12)}`,
-    };
-
-    fetch("/api/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    })
-      .then((res) => res.json())
       .then((res) => {
         if (res) {
-          setFeedback("Successfully added product.");
+          let body = {
+            Name,
+            Price,
+            OnSale,
+            StockLevel,
+            CategoryID,
+            imageURL: res
+              ? `/assets/productImages/${fileName.value.slice(12)}`
+              : null,
+          };
+
+          fetch("/api/products", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              if (res) {
+                setFeedback("Successfully added product.");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              setFeedback(
+                "An error occurred while inserting the product. Try again or contact support."
+              );
+            });
         }
       })
       .catch((err) => {
         console.log(err);
         setFeedback(
-          "An error occurred while inserting the product. Try again or contact support."
+          "An error occurred while inserting the product image. Try again or contact support."
         );
       });
   };

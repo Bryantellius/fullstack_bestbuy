@@ -5,4 +5,5 @@ export interface IProduct {
   CategoryID: number;
   OnSale: number;
   StockLevel: string;
+  imageURL: string;
 }
