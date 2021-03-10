@@ -1,9 +1,22 @@
 import * as express from "express";
 import db from "../../db/queries/products";
 import filterByCategory from "../../db/queries/filtered_products";
-import passport from "passport";
+import * as passport from "passport";
 
 const router = express.Router();
+
+const isAdmin = (
+  req: any,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  if (!req.user || req.user.Role !== "admin") {
+    return res
+      .status(401)
+      .json({ msg: "You are not authorized to make this request." });
+  }
+  return next();
+};
 
 router.get(
   "/:id?",
@@ -52,15 +65,14 @@ router.get(
 
 router.use((req, res, next) => {
   passport.authenticate("bearer", { session: false }, (err, user, info) => {
-    if (user) {
-      req.user = user;
-    }
+    if (user) req.user = user;
     return next();
   })(req, res, next);
 });
 
 router.post(
   "/",
+  isAdmin,
   async (
     req: express.Request,
     res: express.Response,
@@ -78,6 +90,7 @@ router.post(
 
 router.put(
   "/:id",
+  isAdmin,
   async (
     req: express.Request,
     res: express.Response,
@@ -96,6 +109,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isAdmin,
   async (
     req: express.Request,
     res: express.Response,

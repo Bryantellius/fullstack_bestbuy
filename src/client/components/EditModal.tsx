@@ -1,4 +1,5 @@
 import * as React from "react";
+import { apiService } from "../utils/apiService";
 
 const EditModal: React.FC<IEditModalProps> = ({
   productID,
@@ -29,28 +30,23 @@ const EditModal: React.FC<IEditModalProps> = ({
       .catch((err) => console.log(err));
   };
 
-  const formSubmit = (e: React.FormEvent) => {
+  const formSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const updatedProduct = { Name, Price, OnSale, StockLevel, CategoryID };
 
-    fetch(`/api/products/${productID}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedProduct),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res) {
-          setFeedback("Successfully updated product.");
-          setProduct(updatedProduct);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setFeedback(
-          "An error occurred while updating the product. Try again or contact support."
-        );
-      });
+    let res = await apiService(
+      `/api/products/${productID}`,
+      "PUT",
+      updatedProduct
+    );
+    if (res) {
+      setFeedback("Successfully updated product.");
+      setProduct(updatedProduct);
+    } else {
+      setFeedback(
+        "An error occurred while updating the product. Try again or contact support."
+      );
+    }
   };
 
   return (

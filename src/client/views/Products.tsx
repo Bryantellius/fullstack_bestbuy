@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { User } from "../utils/apiService";
 import { IProduct } from "../utils/types";
 
 const Products: React.FC = () => {
@@ -40,13 +41,21 @@ const Products: React.FC = () => {
       .catch((err) => console.log(err));
   };
 
+  const displayAddProduct = () => {
+    if (User.role === "admin") {
+      return (
+        <Link className="btn btn-outline-warning nav-link" to="/products/add">
+          Add Product
+        </Link>
+      );
+    }
+  };
+
   return (
     <main className="container">
       <div className="d-flex justify-content-between">
         <h1>Products</h1>
-        <Link className="btn btn-outline-warning nav-link" to="/products/add">
-          Add Product
-        </Link>
+        {displayAddProduct()}
       </div>
       <div className="row">
         <h3>Count: {products.length}</h3>
@@ -75,7 +84,6 @@ const Products: React.FC = () => {
       </div>
       <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4">
         {products.map((p: IProduct) => {
-          console.log(p.imageURL);
           return (
             <div key={p.ProductID} className="card">
               <Link to={`/products/${p.ProductID}`}>{p.Name}</Link>

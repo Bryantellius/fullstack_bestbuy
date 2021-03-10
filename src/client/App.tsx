@@ -5,6 +5,7 @@ import Products from "./views/Products";
 import NotFound from "./views/NotFound";
 import ProductView from "./views/ProductView";
 import AddProduct from "./views/AddProduct";
+import Login from "./views/Login";
 import Navbar from "./components/Navbar";
 
 const App: React.FC = () => {
@@ -23,6 +24,9 @@ const App: React.FC = () => {
         </Route>
         <Route exact path="/products">
           <Products />
+        </Route>
+        <Route path="/login">
+          <Login />
         </Route>
         <Route path="*">
           <NotFound />

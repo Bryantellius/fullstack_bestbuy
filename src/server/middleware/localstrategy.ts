@@ -11,8 +11,7 @@ passport.use(
     { usernameField: "email", session: false },
     async (email, password, next) => {
       try {
-        let user = await db.findOneUserByEmail(email);
-        console.log(user[0]);
+        let user: any = await db.findOneUserByEmail(email);
         if (user[0] && comparePassword(password, user[0].password)) {
           next(null, user[0]);
         } else {
