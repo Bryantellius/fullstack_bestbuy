@@ -1,6 +1,7 @@
 import * as express from "express";
 import db from "../../db/queries/products";
 import filterByCategory from "../../db/queries/filtered_products";
+import passport from "passport";
 
 const router = express.Router();
 
@@ -48,6 +49,15 @@ router.get(
     }
   }
 );
+
+router.use((req, res, next) => {
+  passport.authenticate("bearer", { session: false }, (err, user, info) => {
+    if (user) {
+      req.user = user;
+    }
+    return next();
+  })(req, res, next);
+});
 
 router.post(
   "/",

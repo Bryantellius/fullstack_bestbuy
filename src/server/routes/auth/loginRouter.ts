@@ -17,7 +17,7 @@ router.post(
       });
     } catch (error) {
       console.log("Incorrect Log In!");
-      res.json(false);
+      res.status(500).json(false);
     }
   }
 );

@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as morgan from "morgan";
 import * as path from "path";
-import apiRouter from "./routes/api";
+import router from "./routes";
 import config from "./config";
 import * as passport from "passport";
 import "./middleware/bearerstrategy";
@@ -14,7 +14,7 @@ app.use(passport.initialize());
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/api", apiRouter);
+app.use(router);
 
 app.use(
   "*",
