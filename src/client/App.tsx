@@ -1,5 +1,11 @@
 import * as React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import { User } from "./utils/apiService";
 import Home from "./views/Home";
 import Products from "./views/Products";
 import NotFound from "./views/NotFound";
@@ -9,15 +15,21 @@ import Login from "./views/Login";
 import Navbar from "./components/Navbar";
 
 const App: React.FC = () => {
+  const [isAdmin, setIsAdmin] = React.useState(User.role === "admin");
+
+  React.useEffect(() => {
+    console.log("Permission change");
+  }, [isAdmin]);
+
   return (
     <Router>
-      <Navbar />
+      <Navbar isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
       <Switch>
         <Route exact path="/">
           <Home />
         </Route>
         <Route exact path="/products/add">
-          <AddProduct />
+          {isAdmin ? <AddProduct /> : <Redirect push to="/login" />}
         </Route>
         <Route exact path="/products/:id">
           <ProductView />
@@ -26,7 +38,7 @@ const App: React.FC = () => {
           <Products />
         </Route>
         <Route path="/login">
-          <Login />
+          <Login setIsAdmin={setIsAdmin} />
         </Route>
         <Route path="*">
           <NotFound />

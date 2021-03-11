@@ -1,24 +1,18 @@
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import * as React from "react";
 import { NavLink } from "react-router-dom";
-import { User, removeAccessTokens } from "../utils/apiService";
+import { removeAccessTokens } from "../utils/apiService";
 
-const Navbar = () => {
+const Navbar: React.FC<INavbarProps> = ({ isAdmin, setIsAdmin }) => {
   const history = useHistory();
-  const location = useLocation();
 
   const handleSignOut = () => {
     removeAccessTokens();
+    setIsAdmin(false);
     history.push("/");
   };
 
-  React.useEffect(() => {
-    if (User.role) {
-      console.log("Welcome!");
-    }
-  }, [location.pathname]);
-
-  if (User.role === "admin") {
+  if (isAdmin) {
     return (
       <nav className="navbar bg-primary">
         <h1>Bestbye</h1>
@@ -66,5 +60,10 @@ const Navbar = () => {
     );
   }
 };
+
+interface INavbarProps {
+  isAdmin: boolean;
+  setIsAdmin: any;
+}
 
 export default Navbar;

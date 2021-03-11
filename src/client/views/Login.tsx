@@ -2,14 +2,16 @@ import * as React from "react";
 import { useHistory } from "react-router";
 import { apiService, setAccessToken } from "../utils/apiService";
 
-const Login: React.FC = () => {
-  const history = useHistory();
-  const [email, setEmail] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
+const Login: React.FC<ILoginProps> = ({ setIsAdmin }) => {
+  const history: any = useHistory();
   const [feedback, setFeedback] = React.useState<string>("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const email = (document.getElementById("email") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement)
+      .value;
+
     let body = {
       email,
       password,
@@ -22,7 +24,8 @@ const Login: React.FC = () => {
           userid: result.userid,
           role: result.role,
         });
-        history.push("/");
+        setIsAdmin(true);
+        history.goBack();
       } else {
         // Display feedback
         setFeedback(
@@ -40,13 +43,12 @@ const Login: React.FC = () => {
       <p>{feedback}</p>
       <form onSubmit={handleLogin}>
         <div className="form-group">
-          <label htmlFor="exampleInputEmail1">Email address</label>
+          <label htmlFor="email">Email address</label>
           <input
             type="email"
             className="form-control"
-            id="exampleInputEmail1"
+            id="email"
             aria-describedby="emailHelp"
-            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <small id="emailHelp" className="form-text text-muted">
@@ -54,12 +56,11 @@ const Login: React.FC = () => {
           </small>
         </div>
         <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Password</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             className="form-control"
-            id="exampleInputPassword1"
-            onChange={(e) => setPassword(e.target.value)}
+            id="password"
             required
           />
         </div>
@@ -70,5 +71,9 @@ const Login: React.FC = () => {
     </main>
   );
 };
+
+interface ILoginProps {
+  setIsAdmin: any;
+}
 
 export default Login;
